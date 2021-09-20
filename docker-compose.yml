@@ -1,0 +1,27 @@
+version: "3.7"
+
+services: 
+    sql:
+        container_name: xmpp_db
+        image: postgres
+        restart: always
+        env_file: .db.env
+        ports: 
+            - 5432:5432
+        volumes: 
+            - ./docker-volumes/db/postgresql:/var/lib/postgresql/prosody
+            
+    xmpp_server:
+        container_name: xmpp
+        image: sameersbn/openfire
+        restart: unless-stopped
+        hostname: aldy1823.co
+        ports: 
+            - 9090:9090
+            - 5222:5222
+            - 7777:7777
+        env_file: .xmpp.env
+        links: 
+            - sql:sql
+        volumes: 
+            - ./docker-volumes/openfire:/var/lib/openfire
